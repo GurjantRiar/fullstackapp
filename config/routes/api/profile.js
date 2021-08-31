@@ -1,10 +1,75 @@
 const express = require("express");
 const router = express.Router();
+const auth = require("../../../middleware/auth");
+const Profile = require("../../../modals/Profile");
+const User = require("../../../modals/User");
+const { check, validationResult } = require("express-validator/check");
+//@route Get api/profile/me
+//@desc Get Current users profile
+//@acess Private
 
-//@route Get api/profile
-//@desc Test route
-//@acess Public
+router.get("/me", auth, async (req, res) => {
+  try {
+    const profile = await Profile.findOne({ user: req.user.id }).populate(
+      "user",
+      ["name", "avatar"]
+    );
+    if (!profile) {
+      return res.status(400).json({ msg: "There is no profile for this user" });
+    }
+    res.json(profile);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send("Server Error");
+  }
+});
+//@route POST api/profile/me
+//@desc create and update user profile
+//@acess Private
+router.post(
+  "/",
+  [
+    auth,
+    [
+      check("status", "Status is required").not().isEmpty(),
+      check("skills", "Skills is required").not().isEmpty(),
+    ],
+  ],
 
-router.get("/", (req, res) => res.send("profile route"));
+  async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
+    const {
+      company,
+      website,
+      location,
+      bio,
+      status,
+      githubusername,
+      skills,
+      youtube,
+      facebook,
+      twitter,
+      instagram,
+      linkedin,
+    } = req.body;
+    //build profile object
+    const profileFields = {};
+    profileFields.user = req.user.id;
+    if (company) profileFields.company = company;
+    if (website) profileFields.website = website;
+    if (location) profileFields.company = location;
+    if (bio) profileFields.bio = bio;
+    if (status) profileFields.company = status;
+    if (githubusername) profileFields.githubusername = githubusername;
+    if (skills) {
+      profileFields.skills = skills.split(",").map((skill) => skill.trim());
+    }
+    console.log(profileFields.skills);
+    res.send("hello");
+  }
+);
 
 module.exports = router;

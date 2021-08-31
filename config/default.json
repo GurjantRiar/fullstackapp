@@ -1,3 +1,4 @@
 {
-    "mongoURI": "mongodb+srv://Gurjantriar01:Gurjantriar01@cluster0.x1yrz.mongodb.net/MERNstack?retryWrites=true&w=majority"
+    "mongoURI": "mongodb+srv://Gurjantriar01:Gurjantriar01@cluster0.x1yrz.mongodb.net/MERNstack?retryWrites=true&w=majority",
+"jwtSecret":"mySecretToken"
 }
