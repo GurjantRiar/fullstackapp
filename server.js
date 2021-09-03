@@ -7,6 +7,8 @@ connectDB();
 
 //init middleware
 app.use(express.json({ extended: false }));
+// app.use(express.urlencoded({ extended: true }));
+// app.use(express.json());
 // app.get("/", function (req, res) {
 //   res.render("index", {});
 // });
